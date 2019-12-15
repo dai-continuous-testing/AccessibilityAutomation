@@ -1,1 +1,4 @@
-/results/0.png
+/results/
+/out/
+/.gradle/
+/.idea/
