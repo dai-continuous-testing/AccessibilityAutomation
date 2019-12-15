@@ -3,6 +3,7 @@ This project enable you to execute accessibility tests on your iOS devices.
 To use it you should use SeeTest Appium cloud in version 12.12 or higher.
 
 Tests Types:
+
 SIZE_TO_SMALL_WIDTH - Check elements width are at least 48px.
 
 SIZE_TO_SMALL_HEIGHT - Check elements height are at least 48px.
