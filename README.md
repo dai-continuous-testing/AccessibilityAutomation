@@ -26,5 +26,6 @@ HtmlReportGenerator.generateReport(page, "Clock", new File("results"));
 ```
 
 We would like to tanks the following projects, that were used for color contrast calculations:
-https://github.com/Tanaguru/Contrast-Finder/blob/master/contrast-finder-utils/src/main/java/org/opens/utils/contrastchecker/ContrastChecker.java
+https://github.com/Tanaguru/Contrast-Finder
+
 https://github.com/SvenWoltmann/color-thief-java
