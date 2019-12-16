@@ -29,6 +29,14 @@ public class HtmlReportGenerator {
                 issuesCount.put(issue.getType(), issuesCount.get(issue.getType()) + 1);
             }
         }
+        for(Section section: page.getSections()){
+            for(Issue issue: section.getIssues()){
+                if(!issuesCount.containsKey(issue.getType())){
+                    issuesCount.put(issue.getType(), 0);
+                }
+                issuesCount.put(issue.getType(), issuesCount.get(issue.getType()) + 1);
+            }
+        }
         Table table = new Table(3);
         table.addRow("Test Type", "Description", "Status");
         HashSet<Issue.Type> typeSet = page.getValidationsSet();
@@ -59,6 +67,9 @@ public class HtmlReportGenerator {
 
             Table elementTable = new Table(3);
             elementTable.addRow("Index", "Voice Over", "Issues");
+            for(Issue issue: section.getIssues()){
+                elementTable.addRow("#", "", issue.getMessage());
+            }
             for(int j = 0; j < section.getElements().size(); j++){
                 Element element = section.getElements().get(j);
                 String index = "";

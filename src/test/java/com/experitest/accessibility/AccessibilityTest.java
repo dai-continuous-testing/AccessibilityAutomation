@@ -40,7 +40,7 @@ public class AccessibilityTest {
     @Test
     public void testUntitled() throws Exception{
         Page page = AccessibilityUtils.getPageAccessibilityInformation(driver, "com.apple.mobiletimer", 70, true);
-        page.validate(Issue.Type.SIZE_TO_SMALL_HEIGHT, Issue.Type.SIZE_TO_SMALL_WIDTH, Issue.Type.CONTRAST, Issue.Type.NO_ACCESSIBILITY_INFO, Issue.Type.IMPORTANT_NO_ACCESSIBILITY);
+        page.validate(Issue.Type.SIZE_TO_SMALL_HEIGHT, Issue.Type.SIZE_TO_SMALL_WIDTH, Issue.Type.CONTRAST, Issue.Type.NO_ACCESSIBILITY_INFO, Issue.Type.IMPORTANT_NO_ACCESSIBILITY, Issue.Type.EXPECTED_CONTENT);
         HtmlReportGenerator.generateReport(page, "Settings", new File("results"));
     }
 

@@ -217,6 +217,9 @@ public class Element {
             buf.append("@XCElementType='XCUIElementTypeSearchField'");
             hasIdentification = true;
         }
+        if(!first){
+            buf.append("and @onScreen='true'");
+        }
         buf.append("]");
         if(!hasIdentification){
             return null;

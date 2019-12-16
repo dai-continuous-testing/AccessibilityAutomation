@@ -2,14 +2,17 @@ package com.experitest.accessibility;
 
 import com.experitest.accessibility.colorthief.ContrastChecker;
 import com.experitest.accessibility.colorthief.ContrastResult;
+import ng.joey.lib.java.google.vision.Vision;
+import ng.joey.lib.java.google.vision.entity.request.AnnotateImageRequest;
+import ng.joey.lib.java.google.vision.entity.request.Feature;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
 
 public class Page {
@@ -46,13 +49,12 @@ public class Page {
         this.sections = sections;
     }
 
-    public void makeLastFirst(){
-        if(elementsList.size() >= 2){
-            Element el = elementsList.remove(elementsList.size() - 1);
-            elementsList.add(0, el);
-        }
-    }
-    public void validate(Issue.Type ...types){
+    /**
+     * perform different validations
+     * @param types the type of validations to perform
+     * @throws IOException
+     */
+    public void validate(Issue.Type ...types) throws IOException {
         this.validations = types;
         for(Issue.Type type: types){
             switch (type){
@@ -118,7 +120,10 @@ public class Page {
                         }
                     }
                     break;
-
+                case EXPECTED_CONTENT:
+                    ContentAnalysis contentAnalysis = new ContentAnalysis(this);
+                    contentAnalysis.process();
+                    break;
             }
         }
     }

@@ -15,6 +15,15 @@ public class Section {
     private BufferedImage image;
     private BufferedImage image2;
     private ArrayList<Element> elements = new ArrayList<>();
+    private ArrayList<Issue> issues = new ArrayList<>();
+
+    public ArrayList<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(ArrayList<Issue> issues) {
+        this.issues = issues;
+    }
 
     public Document getDump() {
         return dump;

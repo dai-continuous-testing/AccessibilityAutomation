@@ -27,6 +27,16 @@ import java.io.StringReader;
 import java.util.HashSet;
 
 public class AccessibilityUtils {
+    /**
+     * This is the entry point to this project. To use this project, call this method with the following parameters.
+     * The Page return object will enable you to perform validations and the generate HTML report.
+     * @param driver Appium driver object. The tested page is expected to be active.
+     * @param appBundleId the application under test bundle ID
+     * @param maxElements The maximum number of elements to analysis (useful in case of infinite scroll screens
+     * @param startStop should set to true
+     * @return Page object
+     * @throws Exception
+     */
     public static Page getPageAccessibilityInformation(RemoteWebDriver driver, String appBundleId, int maxElements, boolean startStop) throws Exception{
         if(maxElements <= 0){
             maxElements = 100;
