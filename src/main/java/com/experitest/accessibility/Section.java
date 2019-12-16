@@ -1,7 +1,6 @@
 package com.experitest.accessibility;
 
 import org.w3c.dom.Document;
-import sun.nio.ch.IOUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,10 +18,6 @@ public class Section {
 
     public ArrayList<Issue> getIssues() {
         return issues;
-    }
-
-    public void setIssues(ArrayList<Issue> issues) {
-        this.issues = issues;
     }
 
     public Document getDump() {
@@ -45,10 +40,6 @@ public class Section {
         return elements;
     }
 
-    public void setElements(ArrayList<Element> elements) {
-        this.elements = elements;
-    }
-
     public BufferedImage getImage2() {
         return image2;
     }
@@ -69,7 +60,7 @@ public class Section {
 
             g2d.drawRect(element.getX() + 1, element.getY() + 1, element.getW() - 2, element.getH() - 2);
             g2d.setStroke(oldStroke);
-            Font newFont = new Font ("Courier New", 1, 20);
+            Font newFont = new Font ("Courier New", Font.BOLD, 20);
             g2d.setFont(newFont);
             g2d.drawString("" + (i + 1), element.getX() + 10, element.getY() + 40);
         }

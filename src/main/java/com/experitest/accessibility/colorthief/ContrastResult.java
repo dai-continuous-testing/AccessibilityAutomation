@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class ContrastResult {
     private Color color1;
     private Color color2;
-    private double ratio;
+    private double ratio = 0;
     private BufferedImage image;
 
     public BufferedImage getImage() {

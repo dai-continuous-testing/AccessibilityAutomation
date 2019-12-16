@@ -12,7 +12,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
-import javax.print.Doc;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,7 +34,7 @@ public class AccessibilityUtils {
      * @param maxElements The maximum number of elements to analysis (useful in case of infinite scroll screens
      * @param startStop should set to true
      * @return Page object
-     * @throws Exception
+     * @throws Exception in case of operation fail
      */
     public static Page getPageAccessibilityInformation(RemoteWebDriver driver, String appBundleId, int maxElements, boolean startStop) throws Exception{
         if(maxElements <= 0){
@@ -159,18 +158,14 @@ public class AccessibilityUtils {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         //API to obtain DOM Document instance
-        DocumentBuilder builder = null;
-        //Create DocumentBuilder with default configuration
-        builder = factory.newDocumentBuilder();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
         //Parse the content to Document object
-        Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
-        return doc;
+        return builder.parse(new InputSource(new StringReader(xmlString)));
     }
     private static BufferedImage getScreenshot(RemoteWebDriver driver) throws IOException{
         ByteArrayInputStream imgbytes = new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
         assert imgbytes.available() > 0;
-        BufferedImage bimg = ImageIO.read(imgbytes);
-        return bimg;
+        return ImageIO.read(imgbytes);
     }
 }

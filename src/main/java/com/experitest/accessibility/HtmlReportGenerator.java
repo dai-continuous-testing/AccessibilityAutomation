@@ -1,6 +1,5 @@
 package com.experitest.accessibility;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,12 +12,9 @@ public class HtmlReportGenerator {
             "<p>Page name: <strong>${pageName}</strong></p>\n" +
             "<p><strong>Type of Tests</strong></p>\n" +
             "<p>&nbsp;</p>\n";
-    private static final String sectionHeader = "<hr />\n" +
-            "<p>Section 1</p>\n" +
-            "<p><img src=\"localimage.png\" alt=\"page image\" /></p>\n";
     public static void generateReport(Page page, String pageName,  File folder) throws IOException {
         folder.mkdirs();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(header.replace("${pageName}", pageName));
         HashMap<Issue.Type, Integer> issuesCount = new HashMap<>();
         for(Element el: page.getElementsList()){
@@ -43,7 +39,7 @@ public class HtmlReportGenerator {
         for(Issue.Type type: Issue.Type.values()){
             String testType = type.name();
             String description = type.getDescription();
-            String status = null;
+            String status;
             if(!typeSet.contains(type)){
                 status = "Wasn't executed";
             } else {
@@ -63,7 +59,7 @@ public class HtmlReportGenerator {
             buffer.append("</p>\n");
             Section section = page.getSections().get(i);
             section.draw(new File(folder, "" + i + ".png"));
-            buffer.append("<p><img style=\"max-height:500px;\" src=\"" + i + ".png\" alt=\"page image\" /></p>\n");
+            buffer.append("<p><img style=\"max-height:500px;\" src=\"").append(i).append(".png\" alt=\"page image\" /></p>\n");
 
             Table elementTable = new Table(3);
             elementTable.addRow("Index", "Voice Over", "Issues");
@@ -72,7 +68,7 @@ public class HtmlReportGenerator {
             }
             for(int j = 0; j < section.getElements().size(); j++){
                 Element element = section.getElements().get(j);
-                String index = "";
+                String index;
                 String voiceOver = "";
                 String issue = "";
                 index = String.valueOf(j + 1);
@@ -108,7 +104,7 @@ class Table {
         rows.add(array);
     }
     public String toString(){
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("<table>\n<tbody>\n");
         for(String[] row: rows){
             buffer.append("<tr>\n");

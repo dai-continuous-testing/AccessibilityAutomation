@@ -2,15 +2,11 @@ package com.experitest.accessibility;
 
 import com.experitest.accessibility.colorthief.ContrastChecker;
 import com.experitest.accessibility.colorthief.ContrastResult;
-import ng.joey.lib.java.google.vision.Vision;
-import ng.joey.lib.java.google.vision.entity.request.AnnotateImageRequest;
-import ng.joey.lib.java.google.vision.entity.request.Feature;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -24,35 +20,22 @@ public class Page {
         return elementsList;
     }
 
-    public void setElementsList(List<Element> elementsList) {
-        this.elementsList = elementsList;
-    }
-
     public List<Section> getSections() {
         return sections;
     }
     private Issue.Type[] validations = null;
-    public Issue.Type[] getValidations(){
-        return validations;
-    }
     public HashSet<Issue.Type> getValidationsSet(){
         HashSet<Issue.Type> set = new HashSet<>();
         if(validations != null){
-            for(Issue.Type type: validations){
-                set.add(type);
-            }
+            Collections.addAll(set, validations);
         }
         return set;
-    }
-
-    public void setSections(List<Section> sections) {
-        this.sections = sections;
     }
 
     /**
      * perform different validations
      * @param types the type of validations to perform
-     * @throws IOException
+     * @throws IOException in case some IO communication fail
      */
     public void validate(Issue.Type ...types) throws IOException {
         this.validations = types;
@@ -113,7 +96,7 @@ public class Page {
                                         ImageIO.write(result.getImage(), "PNG", new File("results", "out_" + System.currentTimeMillis() + ".png"));
                                     }
                                 } catch (Exception ex) {
-                                    System.err.println(element.voiceOver());
+                                    System.err.println(Arrays.toString(element.voiceOver()));
                                     ex.printStackTrace();
                                 }
                             }
@@ -149,7 +132,6 @@ public class Page {
             g.dispose();
         }
 //                                    BufferedImage image = section.getImage().getSubimage(x, y, element.getW(), element.getH());
-        ContrastResult result = ContrastChecker.findContrast(newImage);
-        return result;
+        return ContrastChecker.findContrast(newImage);
     }
 }
