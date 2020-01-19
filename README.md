@@ -26,7 +26,9 @@ HtmlReportGenerator.generateReport(page, "Clock", new File("results"));
 
 ```
 
-We would like to tanks the following projects, that were used for color contrast calculations:
+We would like to thanks the following projects, that were used for color contrast calculations as well as integration with googlevision:
 https://github.com/Tanaguru/Contrast-Finder
 
 https://github.com/SvenWoltmann/color-thief-java
+
+https://github.com/josephdalughut/googlecloudvision-api-java
