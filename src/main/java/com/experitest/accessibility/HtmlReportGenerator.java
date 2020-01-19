@@ -105,7 +105,7 @@ class Table {
     }
     public String toString(){
         StringBuilder buffer = new StringBuilder();
-        buffer.append("<table>\n<tbody>\n");
+        buffer.append("<table  border=\"1\" cellpadding=\"0\" cellspacing=\"0\">\n<tbody>\n");
         for(String[] row: rows){
             buffer.append("<tr>\n");
             for(String value: row){

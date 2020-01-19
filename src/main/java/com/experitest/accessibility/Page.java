@@ -41,21 +41,21 @@ public class Page {
         this.validations = types;
         for(Issue.Type type: types){
             switch (type){
-                case SIZE_TO_SMALL_WIDTH:
+                case SIZE_TOO_SMALL_WIDTH:
                     for(Element element: getElementsList()){
                         if(element.getW() < 48){
                             Issue issue = new Issue();
-                            issue.setType(Issue.Type.SIZE_TO_SMALL_WIDTH);
+                            issue.setType(Issue.Type.SIZE_TOO_SMALL_WIDTH);
                             issue.setMessage("Element width is " + element.getW() + "px, minimum width should be 48px");
                             element.getIssues().add(issue);
                         }
                     }
                     break;
-                case SIZE_TO_SMALL_HEIGHT:
+                case SIZE_TOO_SMALL_HEIGHT:
                     for(Element element: getElementsList()){
                         if(element.getH() < 48){
                             Issue issue = new Issue();
-                            issue.setType(Issue.Type.SIZE_TO_SMALL_HEIGHT);
+                            issue.setType(Issue.Type.SIZE_TOO_SMALL_HEIGHT);
                             issue.setMessage("Element height is " + element.getH() + "px, minimum height should be 48px");
                             element.getIssues().add(issue);
                         }
@@ -105,6 +105,13 @@ public class Page {
                     break;
                 case EXPECTED_CONTENT:
                     ContentAnalysis contentAnalysis = new ContentAnalysis(this);
+                    contentAnalysis.verifyKey();
+                    try {
+                        contentAnalysis.initSections();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
                     contentAnalysis.process();
                     break;
             }

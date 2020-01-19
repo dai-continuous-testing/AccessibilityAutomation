@@ -1,5 +1,6 @@
 package com.experitest.accessibility;
 
+import ng.joey.lib.java.google.vision.Vision;
 import org.w3c.dom.Document;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,15 @@ public class Section {
     private BufferedImage image2;
     private ArrayList<Element> elements = new ArrayList<>();
     private ArrayList<Issue> issues = new ArrayList<>();
+    private Vision.Response visionResponse = null;
+
+    public Vision.Response getVisionResponse() {
+        return visionResponse;
+    }
+
+    public void setVisionResponse(Vision.Response visionResponse) {
+        this.visionResponse = visionResponse;
+    }
 
     public ArrayList<Issue> getIssues() {
         return issues;

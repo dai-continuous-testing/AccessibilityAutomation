@@ -14,15 +14,19 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class ContentAnalysis {
     private Page page;
+    private String googleVisionKey;
     public ContentAnalysis(Page page){
         this.page = page;
     }
 
-    public void process() throws IOException{
+    public void verifyKey() throws IOException{
         File googleVisionPropertiesFile = new File("googlevision.properties");
         if(!googleVisionPropertiesFile.exists()){
             throw new RuntimeException("Unable to find googlevision.properties file. This file is required for testing of EXPECTED_CONTENT");
@@ -31,36 +35,76 @@ public class ContentAnalysis {
         try (FileReader fileReader = new FileReader(googleVisionPropertiesFile)){
             googleVisionProperties.load(fileReader);
         }
-        String googleVisionKey = googleVisionProperties.getProperty("key");
+        googleVisionKey = googleVisionProperties.getProperty("key");
         if(googleVisionKey == null){
             throw new RuntimeException("Couldn't find key property in the googlevision.properties file");
         }
-        Vision vision = new Vision();
+    }
+
+    public void initSections() throws InterruptedException{
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(page.getSections().size());
+        for(Section section: page.getSections()){
+            Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    Image image = new Image(imgToBase64String(section.getImage(), "PNG"));
+                    Vision.Response response = null;
+                    try {
+                        response = Vision.analyze(getRequest(image), googleVisionKey);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    section.setVisionResponse(response);
+                }
+            };
+            executor.execute(task);
+        }
+        executor.shutdown();
+        executor.awaitTermination(30, TimeUnit.SECONDS);
+    }
+
+    public void process() throws IOException{
+
+        HashSet<String> notFound = new HashSet<>();
         for(Section section: page.getSections()) {
-            Image image = new Image(imgToBase64String(section.getImage(), "PNG"));
-            Vision.Response response = Vision.analyze(getRequest(image), googleVisionKey);
+            Vision.Response response = section.getVisionResponse();
             String resp = new Gson().toJson(response);
             System.out.println(resp);
             if(response.responses == null || response.responses.length == 0){
                 throw new RuntimeException("Could not get response");
             }
             String[] textValues = response.responses[0].fullTextAnnotation.text.split("\n");
-            HashSet<String> notFound = new HashSet<>();
             for(int i = 0; i < textValues.length; i++){
                 String text = textValues[i];
+                if(text.length() == 1){ // ignore single char texts
+                    continue;
+                }
+                String[] textElements = text.split("\\s+");
+                StringBuilder sb = new StringBuilder();
+                for(String textElement: textElements){
+                    if(textElement.length() == 1 || Pattern.matches("\\W+", textElement)){
+                        continue;
+                    }
+                    sb.append(textElement);
+                    sb.append(" ");
+                }
+                if(sb.toString().isEmpty()){
+                    continue;
+                }
+                String textAlternative = sb.toString().trim();
                 if(i < 4) { // first few elements can contain the header
                     if (text.equalsIgnoreCase("No SIM")) {
                         // part of header
                         continue;
                     }
-                    if (Pattern.matches("\\d\\d\\:\\d\\d", text)) {
+                    if (Pattern.matches("\\d+\\:\\d\\d", text)) {
                         continue;
                     }
                 }
                 boolean found = false;
                 for(Element el: page.getElementsList()){
                     String voiceOver = Arrays.toString(el.voiceOver()).toLowerCase().replace('0', 'o');
-                    if(voiceOver.contains(text.toLowerCase().replace('0', 'o'))){
+                    if(voiceOver.contains(text.toLowerCase().replace('0', 'o')) || voiceOver.contains(textAlternative.toLowerCase().replace('0', 'o'))){
                         found = true;
                         break;
                     }
@@ -97,6 +141,7 @@ public class ContentAnalysis {
                                 //and a list of features to detect
                                 new Feature[]{
                                         new Feature(Feature.Type.DOCUMENT_TEXT_DETECTION)
+                                        ,new Feature(Feature.Type.TEXT_DETECTION)
                                 }
                         )
                 }

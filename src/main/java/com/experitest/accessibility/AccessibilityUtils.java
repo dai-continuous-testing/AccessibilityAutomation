@@ -21,11 +21,19 @@ import javax.xml.xpath.XPathFactory;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
 
 public class AccessibilityUtils {
+    public static Page getPageAccessibilityInformation(RemoteWebDriver driver) throws Exception{
+        String activityJson = (String)driver.executeScript("seetest:client.getCurrentApplicationName()");
+        JsonObject json = JsonParser.parseString(activityJson).getAsJsonObject();
+        String activity = json.get("text").getAsString();
+        return getPageAccessibilityInformation(driver, activity, 70, true);
+    }
+
     /**
      * This is the entry point to this project. To use this project, call this method with the following parameters.
      * The Page return object will enable you to perform validations and the generate HTML report.
@@ -105,7 +113,11 @@ public class AccessibilityUtils {
 
         return page;
     }
-
+    public static void validate(RemoteWebDriver driver, String pageName, File reportFolder, Issue.Type...validations) throws Exception{
+        Page page = AccessibilityUtils.getPageAccessibilityInformation(driver);
+        page.validate(validations);
+        HtmlReportGenerator.generateReport(page, pageName, reportFolder);
+    }
 
     private static boolean updateLocations(Document doc, Element el) throws Exception{
         XPath xPath = XPathFactory.newInstance().newXPath();

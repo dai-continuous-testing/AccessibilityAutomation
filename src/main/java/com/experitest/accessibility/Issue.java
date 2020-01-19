@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 
 public class Issue {
     enum Type {
-        SIZE_TO_SMALL_WIDTH("Check elements width are at least 48px"),
-        SIZE_TO_SMALL_HEIGHT("Check elements height are at least 48px"),
+        SIZE_TOO_SMALL_WIDTH("Check elements width are at least 48px"),
+        SIZE_TOO_SMALL_HEIGHT("Check elements height are at least 48px"),
         NO_ACCESSIBILITY_INFO("Elements are missing accessibility information"),
         CONTRAST("Color contrast is at least 4.5"),
         EXPECTED_CONTENT("Check page content"),
