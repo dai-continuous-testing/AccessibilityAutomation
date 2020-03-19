@@ -32,6 +32,8 @@ public class AccessibilityTest {
         dc.setCapability("deviceQuery", "@os='ios' and @category='PHONE'");
         dc.setCapability(MobileCapabilityType.APP, "cloud:com.experitest.ExperiBank");
         dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "com.experitest.ExperiBank");
+        //dc.setCapability(IOSMobileCapabilityType.BUNDLE_ID, "com.apple.Preferences");
+
         driver = new IOSDriver<>(new URL("https://demo.experitest.com/wd/hub"), dc);    }
 
 

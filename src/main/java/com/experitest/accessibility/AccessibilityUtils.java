@@ -37,23 +37,29 @@ public class AccessibilityUtils {
     /**
      * This is the entry point to this project. To use this project, call this method with the following parameters.
      * The Page return object will enable you to perform validations and the generate HTML report.
-     * @param driver Appium driver object. The tested page is expected to be active.
+     * @param driverObject Appium driver object. The tested page is expected to be active.
      * @param appBundleId the application under test bundle ID
      * @param maxElements The maximum number of elements to analysis (useful in case of infinite scroll screens
      * @param startStop should set to true
      * @return Page object
      * @throws Exception in case of operation fail
      */
-    public static Page getPageAccessibilityInformation(RemoteWebDriver driver, String appBundleId, int maxElements, boolean startStop) throws Exception{
+    public static Page getPageAccessibilityInformation(Object driverObject, String appBundleId, int maxElements, boolean startStop) throws Exception{
+        Driver driver;
+        if(driverObject instanceof RemoteWebDriver){
+            driver = new AppDriver((RemoteWebDriver)driverObject);
+        } else {
+            driver = null;
+        }
         if(maxElements <= 0){
             maxElements = 100;
         }
         Page page = new Page();
         if(startStop){
-            driver.executeScript("seetest:client.accessibilityStart()");
+            driver.accessibilityStart();
         }
 
-        driver.executeScript("seetest:client.launch(\"" + appBundleId + "\", \"false\",\"false\")");
+        driver.launch(appBundleId);
 
         String xml = driver.getPageSource();
         Document doc = convertStringToXMLDocument(xml);
@@ -65,13 +71,13 @@ public class AccessibilityUtils {
 //        String xml = driver.getPageSource();
         Section currentSection = new Section();
         currentSection.setDump(doc);
-        currentSection.setImage(getScreenshot(driver));
+        currentSection.setImage(driver.getScreenshot());
         page.getSections().add(currentSection);
         boolean secondImageNeeded = true;
         for(int i = 0; i < maxElements; i++){
-            String str4 = (String)driver.executeScript("seetest:client.accessibilityMoveNext()");
+            String str4 = (String)driver.accessibilityMoveNext();
             if(secondImageNeeded){
-                currentSection.setImage2(getScreenshot(driver));
+                currentSection.setImage2(driver.getScreenshot());
                 secondImageNeeded = false;
             }
 
@@ -95,7 +101,7 @@ public class AccessibilityUtils {
                     }
                     currentSection = new Section();
                     currentSection.setDump(doc);
-                    currentSection.setImage(getScreenshot(driver));
+                    currentSection.setImage(driver.getScreenshot());
                     secondImageNeeded = true;
                     page.getSections().add(currentSection);
                     currentSection.getElements().add(el);
@@ -108,7 +114,7 @@ public class AccessibilityUtils {
         }
 
         if(startStop) {
-            driver.executeScript("seetest:client.accessibilityStop()");
+            driver.accessibilityStop();
         }
 
         return page;
@@ -174,10 +180,5 @@ public class AccessibilityUtils {
 
         //Parse the content to Document object
         return builder.parse(new InputSource(new StringReader(xmlString)));
-    }
-    private static BufferedImage getScreenshot(RemoteWebDriver driver) throws IOException{
-        ByteArrayInputStream imgbytes = new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES));
-        assert imgbytes.available() > 0;
-        return ImageIO.read(imgbytes);
     }
 }
