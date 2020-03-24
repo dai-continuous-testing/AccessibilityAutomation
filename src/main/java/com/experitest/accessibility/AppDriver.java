@@ -33,7 +33,7 @@ public class AppDriver implements Driver{
 
     @Override
     public void launch(String appBundleId) {
-        driver.executeScript("seetest:client.launch(\"" + appBundleId + "\", \"false\",\"false\")");
+        driver.executeScript("seetest:client.launch(\"" + appBundleId + "\", false, false)");
     }
 
     @Override

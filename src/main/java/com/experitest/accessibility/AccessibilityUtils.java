@@ -35,29 +35,24 @@ public class AccessibilityUtils {
             driver = new SeeDriver(driverObject);
         }
 
-        String activityJson = (String)driver.executeScript("seetest:client.getCurrentApplicationName()");
+        String activityJson = driver.getCurrentApplicationName();
         JsonObject json = JsonParser.parseString(activityJson).getAsJsonObject();
         String activity = json.get("text").getAsString();
+        //String activity = driver.getCurrentApplicationName();
         return getPageAccessibilityInformation(driver, activity, 70, true);
     }
 
     /**
      * This is the entry point to this project. To use this project, call this method with the following parameters.
      * The Page return object will enable you to perform validations and the generate HTML report.
-     * @param driverObject Appium driver object. The tested page is expected to be active.
+     * @param driver Appium driver object. The tested page is expected to be active.
      * @param appBundleId the application under test bundle ID
      * @param maxElements The maximum number of elements to analysis (useful in case of infinite scroll screens
      * @param startStop should set to true
      * @return Page object
      * @throws Exception in case of operation fail
      */
-    public static Page getPageAccessibilityInformation(Object driverObject, String appBundleId, int maxElements, boolean startStop) throws Exception{
-        Driver driver;
-        if(driverObject instanceof RemoteWebDriver){
-            driver = new AppDriver((RemoteWebDriver)driverObject);
-        } else {
-            driver = new SeeDriver(driverObject);
-        }
+    public static Page getPageAccessibilityInformation(Driver driver, String appBundleId, int maxElements, boolean startStop) throws Exception{
         if(maxElements <= 0){
             maxElements = 100;
         }

@@ -22,7 +22,7 @@ public class AccessibilityTest {
     protected IOSDriver<IOSElement> driver = null;
 
     DesiredCapabilities dc = new DesiredCapabilities();
-    private String accessKey = "eyJ4cC51IjozNDY2MjMsInhwLnAiOjIsInhwLm0iOiJNVFUzTkRBNE5qRTJOVEEwTmciLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE4ODk0NDYxNjUsImlzcyI6ImNvbS5leHBlcml0ZXN0In0.BBtPr5V0WxWyySPrVtrwIgGaSoE9ewV6NRplFyKG3fU";
+    private String accessKey = "eyJ4cC51IjozNDY2MjMsInhwLnAiOjIsInhwLm0iOiJNVFU0TkRnMk1qRXhPVE15TWciLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE5MDAyMjIxMTksImlzcyI6ImNvbS5leHBlcml0ZXN0In0.TnZJMSP7K-gmWOfQlrbB_QxxQ6qFu2meT-VLlugJSOM";
 
     @BeforeMethod
     public void setUp() throws MalformedURLException {
