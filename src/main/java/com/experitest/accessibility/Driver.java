@@ -10,4 +10,5 @@ public interface Driver {
     void launch(String activity);
     String accessibilityMoveNext();
     BufferedImage getScreenshot() throws IOException;
+    String getCurrentApplicationName();
 }

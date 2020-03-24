@@ -27,7 +27,14 @@ import java.io.StringReader;
 import java.util.HashSet;
 
 public class AccessibilityUtils {
-    public static Page getPageAccessibilityInformation(RemoteWebDriver driver) throws Exception{
+    public static Page getPageAccessibilityInformation(Object driverObject) throws Exception{
+        Driver driver;
+        if(driverObject instanceof RemoteWebDriver){
+            driver = new AppDriver((RemoteWebDriver)driverObject);
+        } else {
+            driver = new SeeDriver(driverObject);
+        }
+
         String activityJson = (String)driver.executeScript("seetest:client.getCurrentApplicationName()");
         JsonObject json = JsonParser.parseString(activityJson).getAsJsonObject();
         String activity = json.get("text").getAsString();
@@ -49,7 +56,7 @@ public class AccessibilityUtils {
         if(driverObject instanceof RemoteWebDriver){
             driver = new AppDriver((RemoteWebDriver)driverObject);
         } else {
-            driver = null;
+            driver = new SeeDriver(driverObject);
         }
         if(maxElements <= 0){
             maxElements = 100;
@@ -119,7 +126,7 @@ public class AccessibilityUtils {
 
         return page;
     }
-    public static void validate(RemoteWebDriver driver, String pageName, File reportFolder, Issue.Type...validations) throws Exception{
+    public static void validate(Object driver, String pageName, File reportFolder, Issue.Type...validations) throws Exception{
         Page page = AccessibilityUtils.getPageAccessibilityInformation(driver);
         page.validate(validations);
         HtmlReportGenerator.generateReport(page, pageName, reportFolder);

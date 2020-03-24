@@ -42,4 +42,9 @@ public class SeeDriver implements Driver{
         String path = client.capture();
         return ImageIO.read(new File(path));
     }
+
+    @Override
+    public String getCurrentApplicationName() {
+        return client.getCurrentApplicationName();
+    }
 }

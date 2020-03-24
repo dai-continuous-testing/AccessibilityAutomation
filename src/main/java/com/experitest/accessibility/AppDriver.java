@@ -48,4 +48,9 @@ public class AppDriver implements Driver{
         return ImageIO.read(imgbytes);
     }
 
+    @Override
+    public String getCurrentApplicationName() {
+        return (String)driver.executeScript("seetest:client.getCurrentApplicationName()");
+    }
+
 }
