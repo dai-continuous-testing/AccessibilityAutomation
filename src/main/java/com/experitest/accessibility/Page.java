@@ -43,7 +43,7 @@ public class Page {
             switch (type){
                 case SIZE_TOO_SMALL_WIDTH:
                     for(Element element: getElementsList()){
-                        if(element.getW() < 48){
+                        if(element.getW() < Defaults.getInstance().getMinWidth()){
                             Issue issue = new Issue();
                             issue.setType(Issue.Type.SIZE_TOO_SMALL_WIDTH);
                             issue.setMessage("Element width is " + element.getW() + "px, minimum width should be 48px");
@@ -53,7 +53,7 @@ public class Page {
                     break;
                 case SIZE_TOO_SMALL_HEIGHT:
                     for(Element element: getElementsList()){
-                        if(element.getH() < 48){
+                        if(element.getH() < Defaults.getInstance().getMinHeight()){
                             Issue issue = new Issue();
                             issue.setType(Issue.Type.SIZE_TOO_SMALL_HEIGHT);
                             issue.setMessage("Element height is " + element.getH() + "px, minimum height should be 48px");
@@ -85,13 +85,19 @@ public class Page {
                                     if(result == null){
                                         continue;
                                     }
-                                    if((result.getRatio() < 4.5 && section.getImage2() != null)){
+
+                                    double contrast = Defaults.getInstance().getSmallTextContrast();
+                                    if(element.getH() > Defaults.getInstance().getContrastBreak()){
+                                        contrast = Defaults.getInstance().getLargeTextContrast();
+                                    }
+
+                                    if((result.getRatio() < contrast && section.getImage2() != null)){
                                         result = generateContrast(element, section.getImage2());
                                     }
-                                    if(result.getRatio() < 4.5){
+                                    if(result.getRatio() < contrast){
                                         Issue issue = new Issue();
                                         issue.setType(Issue.Type.CONTRAST);
-                                        issue.setMessage("Contrast is too low: " + (Math.round(result.getRatio() * 100)/100) + ", expected 4.5");
+                                        issue.setMessage("Contrast is too low: " + (Math.round(result.getRatio() * 100)/100) + ", expected " + contrast);
                                         element.getIssues().add(issue);
                                         ImageIO.write(result.getImage(), "PNG", new File("results", "out_" + System.currentTimeMillis() + ".png"));
                                     }

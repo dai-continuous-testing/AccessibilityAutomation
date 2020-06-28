@@ -3,3 +3,5 @@
 /.gradle/
 /.idea/
 /googlevision.properties
+build/
+results1/
